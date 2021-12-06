@@ -15,7 +15,8 @@ $ cat <EOF > terraform.tfvars
 node_location   = "East US 2"
 resource_prefix = "ksahm"
 Environment     = "Test"
-master_node_count = 3
+# master_node_count could be 1 (single) oder 3 (HA)
+master_node_count = 1
 worker_node_count = 2
 master_node_size = "Standard_DS1_v2"
 worker_node_size = "Standard_D2s_v3"
@@ -25,7 +26,10 @@ tenant_id       = "<Azure tenant ID>"
 EOF
 
 $ terraform validate
+
 $ terraform apply
+
+$ ./deploy_cluster.sh
 ````
 
 ## Test connection via Ansible
