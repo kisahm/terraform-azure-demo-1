@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -x
+dkp create bootstrap
 
 export CLUSTER_NAME=democluster
 kubectl create secret generic ${CLUSTER_NAME}-ssh-key --from-file=ssh-privatekey=${HOME}/.ssh/id_rsa
@@ -16,5 +17,5 @@ else
     CONTROLPLANE_ENDPOINT=$(terraform output -json master_node_ips|jq '.'|egrep -v "(\[|\])"|cut -d'"' -f2)
 fi
 dkp create cluster preprovisioned --cluster-name ${CLUSTER_NAME} --control-plane-endpoint-host ${CONTROLPLANE_ENDPOINT} --control-plane-endpoint-port 6443
-dkp get kubeconfig -c ${CLUSTER_NAME} > ${CLUSTER_NAME}.conf
+#dkp get kubeconfig -c ${CLUSTER_NAME} > ${CLUSTER_NAME}.conf
 kubectl get po
