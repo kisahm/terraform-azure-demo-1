@@ -26,13 +26,12 @@ EOF
 
 $ terraform validate
 $ terraform apply
-
-# Optional
-$ ./create_ansible_inventory.sh
 ````
 
 ## Test connection via Ansible
 ````
+$ ./create_ansible_inventory.sh
+
 $ ansible master -i inventory -m ping
 20.119.198.170 | SUCCESS => {
     "changed": false,
