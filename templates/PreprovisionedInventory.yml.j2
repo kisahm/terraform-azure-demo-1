@@ -1,0 +1,44 @@
+---
+apiVersion: infrastructure.cluster.konvoy.d2iq.io/v1alpha1
+kind: PreprovisionedInventory
+metadata:
+  name: "{{clusterName}}-control-plane"
+  namespace: default
+  labels:
+    cluster.x-k8s.io/cluster-name: "{{clusterName}}"
+    clusterctl.cluster.x-k8s.io/move: ""
+spec:
+  hosts:
+    # Create as many of these as needed to match your infrastructure
+{% for host in groups['master'] %}
+    - address: {{hostvars[host]['ansible_host']}}
+{%endfor %}
+  sshConfig:
+    port: 22
+    # This is the username used to connect to your infrastructure. This user must be root or
+    # have the ability to use sudo without a password
+    user: "{{sshUsername}}"
+    privateKeyRef:
+      # This is the name of the secret you created in the previous step. It must exist in the same
+      # namespace as this inventory object.
+      name: "{{sshSecretName}}"
+      namespace: default
+---
+apiVersion: infrastructure.cluster.konvoy.d2iq.io/v1alpha1
+kind: PreprovisionedInventory
+metadata:
+  name: "{{clusterName}}-md-0"
+  namespace: default
+  labels:
+    clusterctl.cluster.x-k8s.io/move: ""
+spec:
+  hosts:
+{% for host in groups['worker'] %}
+    - address: {{hostvars[host]['ansible_host']}}
+{%endfor %}
+  sshConfig:
+    port: 22
+    user: "{{sshUsername}}"
+    privateKeyRef:
+      name: "{{sshSecretName}}"
+      namespace: default

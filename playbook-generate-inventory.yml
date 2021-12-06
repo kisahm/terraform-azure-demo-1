@@ -1,0 +1,9 @@
+---
+- name: generate PreprovisionedInventory
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: generate template
+      template:
+        src: templates/PreprovisionedInventory.yml.j2
+        dest: PreprovisionedInventory.yml

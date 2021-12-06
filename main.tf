@@ -62,6 +62,18 @@ resource "azurerm_public_ip" "demo_worker_public_ip" {
   }
 }
 
+## Create Linux Public IP for LB if needed
+#resource "azurerm_public_ip" "demo_lb_public_ip" {
+#  count = var.master_node_count ? 3 : 0
+#  name  = "${var.resource_prefix}-lb-PublicIP"
+#  location            = azurerm_resource_group.demo_rg.location
+#  resource_group_name = azurerm_resource_group.demo_rg.name
+#  allocation_method   = var.Environment == "Test" ? "Static" : "Dynamic"
+#  tags = {
+#    environment = var.resource_prefix
+#  }
+#}
+
 # Create Network Interface for Master
 resource "azurerm_network_interface" "demo_master_nic" {
   count = var.master_node_count
@@ -109,7 +121,7 @@ resource "azurerm_network_security_group" "demo_nsg" {
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_range     = "22"
+    destination_port_ranges     = ["22","80","443","6443"]
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
@@ -195,6 +207,55 @@ resource "azurerm_linux_virtual_machine" "demo_worker_linux_vm" {
     node_type = "worker"
   }
 }
+
+#resource "azurerm_lb" "demo-lb" {
+#    count = var.master_node_count ? 3 : 0
+#    name                = "Loadbalancer"
+#    location            = azurerm_resource_group.demo_rg.location
+#    resource_group_name = azurerm_resource_group.demo_rg.name
+#
+#    frontend_ip_configuration {
+#        name                 = "PublicIPAddress"
+#        public_ip_address_id = azurerm_public_ip.demo_lb_public_ip.id
+#    }
+#}
+#
+#resource "azurerm_lb_rule" "demo-lb-rule-6443" {
+#    count = var.master_node_count ? 3 : 0
+#    resource_group_name            = azurerm_resource_group.demo.name
+#    loadbalancer_id                = azurerm_lb.demo.id
+#    name                           = "LBRule"
+#    protocol                       = "Tcp"
+#    frontend_port                  = 6443
+#    backend_port                   = 6443
+#    frontend_ip_configuration_name = "PublicIPAddress"
+#}
+#
+#resource "azurerm_lb_rule" "demo-lb-rule-80" {
+#    count = var.master_node_count ? 3 : 0
+#    resource_group_name            = azurerm_resource_group.demo.name
+#    loadbalancer_id                = azurerm_lb.demo.id
+#    name                           = "LBRule"
+#    protocol                       = "Tcp"
+#    frontend_port                  = 80
+#    backend_port                   = 80
+#    frontend_ip_configuration_name = "PublicIPAddress"
+#}
+#
+#resource "azurerm_lb_rule" "demo-lb-rule-443" {
+#    count = var.master_node_count ? 3 : 0
+#    resource_group_name            = azurerm_resource_group.demo.name
+#    loadbalancer_id                = azurerm_lb.demo.id
+#    name                           = "LBRule"
+#    protocol                       = "Tcp"
+#    frontend_port                  = 443
+#    backend_port                   = 443
+#    frontend_ip_configuration_name = "PublicIPAddress"
+#}
+#
+#output "lb_public_ip" {
+#    value = azurerm_public_ip.demo_lb_public_ip.*.ip_address
+#}
 
 output "master_node_ips" {
     value = azurerm_public_ip.demo_master_public_ip.*.ip_address
