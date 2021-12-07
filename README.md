@@ -11,6 +11,8 @@ Azure based demo environment for Konvoy based on Azure VMs.
 
 ## Quickstart
 ````
+$ az login
+
 $ cat <EOF > terraform.tfvars
 node_location   = "East US 2"
 resource_prefix = "ksahm"
@@ -18,8 +20,8 @@ Environment     = "Test"
 # master_node_count could be 1 (single) oder 3 (HA)
 master_node_count = 1
 worker_node_count = 2
-master_node_size = "Standard_DS1_v2"
-worker_node_size = "Standard_D2s_v3"
+master_node_size = "Standard_D4s_v3"
+worker_node_size = "Standard_D4s_v3"
 admin_username  = "ksahm"
 subscription_id = "<Azure subscription ID>"
 tenant_id       = "<Azure tenant ID>"
@@ -30,6 +32,10 @@ $ terraform validate
 $ terraform apply
 
 $ ./deploy_cluster.sh
+
+# Wait until the cluster is ready.
+# Optinally move the cluster to self-managed
+$ ./make_selfmanaged.sh
 ````
 
 ## Test connection via Ansible

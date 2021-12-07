@@ -4,3 +4,4 @@ terraform.tfstate*
 inventory
 PreprovisionedInventory.yml
 *.conf
+cluster.yml

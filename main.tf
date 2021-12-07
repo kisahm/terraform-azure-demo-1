@@ -138,74 +138,107 @@ resource "azurerm_subnet_network_security_group_association" "demo_subnet_nsg_as
 
 # Create virtual machines for Master
 resource "azurerm_linux_virtual_machine" "demo_master_linux_vm" {
-  count               = var.master_node_count
-  name                = "${var.resource_prefix}-master-${format("%02d", count.index)}"
-  location            = azurerm_resource_group.demo_rg.location
-  resource_group_name = azurerm_resource_group.demo_rg.name
-  size                = var.master_node_size
-  admin_username      = var.admin_username
-  network_interface_ids = [
-    element(azurerm_network_interface.demo_master_nic.*.id, count.index)
-  ]
+    count               = var.master_node_count
+    name                = "${var.resource_prefix}-master-${format("%02d", count.index)}"
+    location            = azurerm_resource_group.demo_rg.location
+    resource_group_name = azurerm_resource_group.demo_rg.name
+    size                = var.master_node_size
+    admin_username      = var.admin_username
+    network_interface_ids = [
+        element(azurerm_network_interface.demo_master_nic.*.id, count.index)
+    ]
 
-  admin_ssh_key {
-    username   = var.admin_username
-    public_key = file("~/.ssh/id_rsa.pub")
-  }
+    admin_ssh_key {
+        username   = var.admin_username
+        public_key = file("~/.ssh/id_rsa.pub")
+    }
 
-  os_disk {
-    name = "myosdisk-master-${count.index}"
-    caching = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-  }
+    os_disk {
+        name = "myosdisk-master-${count.index}"
+        caching = "ReadWrite"
+        storage_account_type = "Standard_LRS"
+        disk_size_gb = 50
 
-  source_image_reference {
-    publisher = "canonical"
-    offer     = "0001-com-ubuntu-server-focal"
-    sku       = "20_04-lts-gen2"
-    version   = "latest"
-  }
+    }
 
-  tags = {
-    environment = var.resource_prefix
-    node_type = "master"
-  }
+    source_image_reference {
+        publisher = "canonical"
+        offer     = "0001-com-ubuntu-server-focal"
+        sku       = "20_04-lts-gen2"
+        version   = "latest"
+#        publisher = "kinvolk"
+#        offer     = "flatcar-container-linux-free"
+#        sku       = "stable"
+#        version   = "2905.2.1"
+#        publisher = "OpenLogic"
+#        offer     = "CentOS"
+#        sku       = "7_9-gen2"
+#        version   = "7.9.2021071901"
+        }
+
+# uncomment only if your using flatcar
+#    plan {
+#        name = "stable-gen2"
+#        publisher = "kinvolk"
+#        product = "flatcar-container-linux-free"
+#    }
+
+    tags = {
+        environment = var.resource_prefix
+        node_type = "master"
+    }
 }
 
 # Create virtual machines for Worker
 resource "azurerm_linux_virtual_machine" "demo_worker_linux_vm" {
-  count               = var.worker_node_count
-  name                = "${var.resource_prefix}-worker-${format("%02d", count.index)}"
-  location            = azurerm_resource_group.demo_rg.location
-  resource_group_name = azurerm_resource_group.demo_rg.name
-  size                = var.worker_node_size
-  admin_username      = var.admin_username
-  network_interface_ids = [
-    element(azurerm_network_interface.demo_worker_nic.*.id, count.index)
-  ]
+    count               = var.worker_node_count
+    name                = "${var.resource_prefix}-worker-${format("%02d", count.index)}"
+    location            = azurerm_resource_group.demo_rg.location
+    resource_group_name = azurerm_resource_group.demo_rg.name
+    size                = var.worker_node_size
+    admin_username      = var.admin_username
+    network_interface_ids = [
+        element(azurerm_network_interface.demo_worker_nic.*.id, count.index)
+    ]
 
-  admin_ssh_key {
-    username   = var.admin_username
-    public_key = file("~/.ssh/id_rsa.pub")
-  }
+    admin_ssh_key {
+        username   = var.admin_username
+        public_key = file("~/.ssh/id_rsa.pub")
+    }
 
-  os_disk {
-    name = "myosdisk-worker-${count.index}"
-    caching = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-  }
+    os_disk {
+        name = "myosdisk-worker-${count.index}"
+        caching = "ReadWrite"
+        storage_account_type = "Standard_LRS"
+        disk_size_gb = 100
+    }
 
-  source_image_reference {
-    publisher = "canonical"
-    offer     = "0001-com-ubuntu-server-focal"
-    sku       = "20_04-lts-gen2"
-    version   = "latest"
-  }
+    source_image_reference {
+        publisher = "canonical"
+        offer     = "0001-com-ubuntu-server-focal"
+        sku       = "20_04-lts-gen2"
+        version   = "latest"
+#        publisher = "kinvolk"
+#        offer     = "flatcar-container-linux-free"
+#        sku       = "stable"
+#        version   = "2905.2.1"
+#        publisher = "OpenLogic"
+#        offer     = "CentOS"
+#        sku       = "7_9-gen2"
+#        version   = "7.9.2021071901"
+        }
 
-  tags = {
-    environment = var.resource_prefix
-    node_type = "worker"
-  }
+# uncomment only if your using flatcar
+#    plan {
+#        name = "stable-gen2"
+#        publisher = "kinvolk"
+#        product = "flatcar-container-linux-free"
+#    }
+
+    tags = {
+        environment = var.resource_prefix
+        node_type = "worker"
+    }
 }
 
 #resource "azurerm_lb" "demo-lb" {

@@ -7,3 +7,11 @@
       template:
         src: templates/PreprovisionedInventory.yml.j2
         dest: PreprovisionedInventory.yml
+
+- name: wait for nodes
+  hosts: master,worker
+  gather_facts: false
+  tasks:
+    -  wait_for_connection:
+        delay: 10
+        timeout: 600
