@@ -81,6 +81,7 @@ resource "azurerm_network_interface" "demo_master_nic" {
   name                = "${var.resource_prefix}-master-${format("%02d", count.index)}-NIC"
   location            = azurerm_resource_group.demo_rg.location
   resource_group_name = azurerm_resource_group.demo_rg.name
+  enable_ip_forwarding = true
   ip_configuration {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.demo_subnet.id
@@ -98,6 +99,7 @@ resource "azurerm_network_interface" "demo_worker_nic" {
   name                = "${var.resource_prefix}-worker-${format("%02d", count.index)}-NIC"
   location            = azurerm_resource_group.demo_rg.location
   resource_group_name = azurerm_resource_group.demo_rg.name
+  enable_ip_forwarding = true
   ip_configuration {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.demo_subnet.id
