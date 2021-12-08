@@ -121,7 +121,7 @@ resource "azurerm_network_security_group" "demo_nsg" {
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_ranges     = ["22","80","443","6443"]
+    destination_port_ranges     = ["22","80","443","6443","9000","9001"]
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
@@ -178,7 +178,7 @@ resource "azurerm_linux_virtual_machine" "demo_master_linux_vm" {
 
 # uncomment only if your using flatcar
 #    plan {
-#        name = "stable-gen2"
+#        name = "stable"
 #        publisher = "kinvolk"
 #        product = "flatcar-container-linux-free"
 #    }
@@ -230,7 +230,7 @@ resource "azurerm_linux_virtual_machine" "demo_worker_linux_vm" {
 
 # uncomment only if your using flatcar
 #    plan {
-#        name = "stable-gen2"
+#        name = "stable"
 #        publisher = "kinvolk"
 #        product = "flatcar-container-linux-free"
 #    }
