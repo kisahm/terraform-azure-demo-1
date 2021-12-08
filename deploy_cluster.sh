@@ -3,6 +3,12 @@
 set -x
 dkp create bootstrap
 
+if [ "$(grep offer main.tf|grep -v '#'|uniq |awk '{print $3}'|cut -d '"' -f2)" == "CentOS" ] && [ "$(grep sku main.tf|grep -v '#'|uniq |awk '{print $3}'|cut -d '"' -f2)" == "7_9-gen2" ]; then
+    sed 's/<PYTHONVERSION>/python/g' templates/ansible.cfg.tmpl > ./ansible.cfg
+else
+    sed 's/<PYTHONVERSION>/python3/g' templates/ansible.cfg.tmpl > ./ansible.cfg
+fi
+
 export CLUSTER_NAME=democluster
 kubectl create secret generic ${CLUSTER_NAME}-ssh-key --from-file=ssh-privatekey=${HOME}/.ssh/id_rsa
 kubectl label secret ${CLUSTER_NAME}-ssh-key clusterctl.cluster.x-k8s.io/move=
@@ -28,7 +34,9 @@ CALICO_INTERFACE="$(grep ^calico_interface terraform.tfvars|awk '{ print $3 }')"
 if [ -z ${CALICO_INTERFACE} ] ; then
     CALICO_INTERFACE="eth0"
 fi
-sed "s/      calicoNetwork:/      calicoNetwork:\n        nodeAddressAutodetectionV4:\n          interface: ${CALICO_INTERFACE}/g" /tmp/cluster.yml > cluster.yml
+sed "s/      calicoNetwork:/      calicoNetwork:\n        nodeAddressAutodetectionV4:\n          interface: ${CALICO_INTERFACE}/g" /tmp/cluster.yml > /tmp/cluster2.yml
+sed "s/encapsulation: IPIP/encapsulation: VXLAN/g" /tmp/cluster2.yml > cluster.yml
+rm /tmp/cluster*.yml
 kubectl apply -f cluster.yml
 
 kubectl get kubeadmcontrolplane,cluster,preprovisionedcluster,preprovisionedmachinetemplate,clusterresourceset,machinedeployment,preprovisionedmachinetemplate,kubeadmconfigtemplate
