@@ -13,7 +13,7 @@ Azure based demo environment for Konvoy based on Azure VMs.
 ````
 $ az login
 
-$ cat <EOF > terraform.tfvars
+$ cat <<EOF > terraform.tfvars
 node_location   = "East US 2"
 resource_prefix = "ksahm"
 Environment     = "Test"
