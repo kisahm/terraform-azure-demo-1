@@ -13,5 +13,13 @@
   gather_facts: false
   tasks:
     -  wait_for_connection:
-        delay: 10
         timeout: 600
+
+- name: create dir for local-path-provisioner
+  hosts: master,worker
+  gather_facts: no
+  become: true
+  tasks:
+    - file: 
+        path: /mnt/disks
+        state: directory
