@@ -20,6 +20,54 @@
   gather_facts: no
   become: true
   tasks:
-    - file: 
+    - name: create /mnt/disks
+      file: 
         path: /mnt/disks
         state: directory
+        mode: '0777'
+    - name: create /opt/lvs
+      file: 
+        path: /opt/lvs
+        state: directory 
+    - name: create loopback devices
+      file: 
+        path: "/opt/lvs/0{{item}}"
+        state: directory
+      with_items:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+        - "4"
+        - "5"
+        - "6"
+        - "7"
+    - name: create loopback targets
+      file: 
+         path: "/mnt/disks/volume-0{{item}}"
+         state: directory
+      with_items:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+        - "4"
+        - "5"
+        - "6"
+        - "7"
+    - name: mount loopback devices
+      mount:
+        path: "/mnt/disks/volume-0{{item}}"
+        src: "/opt/lvs/0{{item}}"
+        opts: bind
+        state: mounted
+        fstype: none
+      with_items:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+        - "4"
+        - "5"
+        - "6"
+        - "7"
