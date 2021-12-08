@@ -23,6 +23,7 @@ worker_node_count = 2
 master_node_size = "Standard_D4s_v3"
 worker_node_size = "Standard_D4s_v3"
 admin_username  = "ksahm"
+calico_interface = "eth0"
 subscription_id = "<Azure subscription ID>"
 tenant_id       = "<Azure tenant ID>"
 EOF
