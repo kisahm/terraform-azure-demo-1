@@ -1,10 +1,12 @@
 #!/bin/bash
 
+set -x
 if [ -z ${CLUSTER_NAME} ] ; then
     export CLUSTER_NAME=democluster
 fi
 
 dkp get kubeconfig -c ${CLUSTER_NAME} > ${CLUSTER_NAME}.conf
+
 dkp create bootstrap controllers --kubeconfig ${CLUSTER_NAME}.conf
 dkp move --to-kubeconfig ${CLUSTER_NAME}.conf
 kubectl --kubeconfig ${CLUSTER_NAME}.conf wait --for=condition=ControlPlaneReady "clusters/${CLUSTER_NAME}" --timeout=20m
