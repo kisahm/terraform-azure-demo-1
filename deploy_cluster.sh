@@ -25,6 +25,9 @@ fi
 
 dkp create cluster preprovisioned --cluster-name ${CLUSTER_NAME} --control-plane-endpoint-host ${CONTROLPLANE_ENDPOINT} --worker-replicas $(grep ^worker_node_count terraform.tfvars|awk '{ print $3 }') --control-plane-endpoint-port 6443 ${EXTRAVARS} --dry-run -o yaml > /tmp/cluster.yml
 CALICO_INTERFACE="$(grep ^calico_interface terraform.tfvars|awk '{ print $3 }')"
+if [ -z ${CALICO_INTERFACE} ] ; then
+    CALICO_INTERFACE="eth0"
+fi
 sed "s/      calicoNetwork:/      calicoNetwork:\n        nodeAddressAutodetectionV4:\n          interface: ${CALICO_INTERFACE}/g" /tmp/cluster.yml > cluster.yml
 kubectl apply -f cluster.yml
 
