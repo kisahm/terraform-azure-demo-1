@@ -51,13 +51,15 @@ kubectl get kubeadmcontrolplane,cluster,preprovisionedcluster,preprovisionedmach
 
 echo "Waiting for platform cluster ready state..."
 
-while [ $(kubectl get kubeadmcontrolplane.controlplane.cluster.x-k8s.io/${CLUSTER_NAME}-control-plane -o json |jq '.status.readyReplicas') -ne $(grep ^master_node_count terraform.tfvars |awk '{ print $3 }') ] ; do 
+while [ $(kubectl get kubeadmcontrolplane.controlplane.cluster.x-k8s.io/${CLUSTER_NAME}-control-plane -o json |jq '.status.readyReplicas // 0') -ne $(grep ^master_node_count terraform.tfvars |awk '{ print $3 }') ] ; do 
     echo "Waiting for Control Plane"
+    sleep 10
 done
-echo "Control Plane is ready."
-while [ $(kubectl get machinedeployment.cluster.x-k8s.io/${CLUSTER_NAME}-md-0 -o json |jq '.status.readyReplicas') -ne $(grep ^worker_node_count terraform.tfvars |awk '{ print $3 }') ] ; do 
+echo "\o/ Control Plane is ready... \o/"
+while [ $(kubectl get machinedeployment.cluster.x-k8s.io/${CLUSTER_NAME}-md-0 -o json |jq '.status.readyReplicas // 0') -ne $(grep ^worker_node_count terraform.tfvars |awk '{ print $3 }') ] ; do 
     echo "Waiting for Worker Nodes"
+    sleep 10
 done
-echo "Cluster is ready."
+echo "\o/ Cluster is ready... \o/"
 
 ./make_selfmanaged.sh
