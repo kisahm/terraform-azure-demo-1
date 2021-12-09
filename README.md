@@ -8,6 +8,8 @@ Azure based demo environment for Konvoy based on Azure VMs.
 - Terraform 2.88.1+ (tested with 2.88.1)
 - jq
 - ansible 
+- dpk cli 2.1.0+
+- kommander cli
 
 ## Quickstart
 ````
@@ -24,6 +26,7 @@ master_node_size = "Standard_D4s_v3"
 worker_node_size = "Standard_D4s_v3"
 admin_username  = "ksahm"
 calico_interface = "eth0"
+cluster_name = "democluster"
 subscription_id = "<Azure subscription ID>"
 tenant_id       = "<Azure tenant ID>"
 EOF
@@ -33,10 +36,6 @@ $ terraform validate
 $ terraform apply
 
 $ ./deploy_cluster.sh
-
-# Wait until the cluster is ready.
-# Optinally move the cluster to self-managed
-$ ./make_selfmanaged.sh
 ````
 
 ## Test connection via Ansible

@@ -1,8 +1,13 @@
 #!/bin/bash
 
+if [ ! -e terraform.tfvars ] ; then
+    echo "Could not find vars file: terraform.tfvars"
+    exit 1
+fi
+
 set -x
 if [ -z ${CLUSTER_NAME} ] ; then
-    export CLUSTER_NAME=democluster
+    export CLUSTER_NAME=$(grep ^cluster_name terraform.tfvars|awk '{ print $3 }'|cut -d '"' -f2)
 fi
 
 dkp get kubeconfig -c ${CLUSTER_NAME} > ${CLUSTER_NAME}.conf

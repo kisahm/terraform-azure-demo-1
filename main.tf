@@ -123,7 +123,7 @@ resource "azurerm_network_security_group" "demo_nsg" {
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_ranges     = ["22","80","443","6443","9000","9001"]
+    destination_port_ranges     = ["22","80","443","6443","9000","9001","30000-32000"]
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
@@ -164,18 +164,18 @@ resource "azurerm_linux_virtual_machine" "demo_master_linux_vm" {
     }
 
     source_image_reference {
-#        publisher = "canonical"
-#        offer     = "0001-com-ubuntu-server-focal"
-#        sku       = "20_04-lts-gen2"
-#        version   = "latest"
+        publisher = "canonical"
+        offer     = "0001-com-ubuntu-server-focal"
+        sku       = "20_04-lts-gen2"
+        version   = "latest"
 #        publisher = "kinvolk"
 #        offer     = "flatcar-container-linux-free"
 #        sku       = "stable"
 #        version   = "2905.2.1"
-        publisher = "OpenLogic"
-        offer     = "CentOS"
-        sku       = "7_9-gen2"
-        version   = "7.9.2021071901"
+#        publisher = "OpenLogic"
+#        offer     = "CentOS"
+#        sku       = "7_9-gen2"
+#        version   = "7.9.2021071901"
         }
 
 # uncomment only if your using flatcar
@@ -216,18 +216,18 @@ resource "azurerm_linux_virtual_machine" "demo_worker_linux_vm" {
     }
 
     source_image_reference {
-#        publisher = "canonical"
-#        offer     = "0001-com-ubuntu-server-focal"
-#        sku       = "20_04-lts-gen2"
-#        version   = "latest"
+        publisher = "canonical"
+        offer     = "0001-com-ubuntu-server-focal"
+        sku       = "20_04-lts-gen2"
+        version   = "latest"
 #        publisher = "kinvolk"
 #        offer     = "flatcar-container-linux-free"
 #        sku       = "stable"
 #        version   = "2905.2.1"
-        publisher = "OpenLogic"
-        offer     = "CentOS"
-        sku       = "7_9-gen2"
-        version   = "7.9.2021071901"
+#        publisher = "OpenLogic"
+#        offer     = "CentOS"
+#        sku       = "7_9-gen2"
+#        version   = "7.9.2021071901"
         }
 
 # uncomment only if your using flatcar

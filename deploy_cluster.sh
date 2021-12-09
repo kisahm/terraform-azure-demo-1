@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ ! -e terraform.tfvars ] ; then
+    echo "Could not find vars file: terraform.tfvars"
+    exit 1
+fi
+
 set -x
 dkp create bootstrap
 
@@ -9,7 +14,10 @@ else
     sed 's/<PYTHONVERSION>/python3/g' templates/ansible.cfg.tmpl > ./ansible.cfg
 fi
 
-export CLUSTER_NAME=democluster
+if [ -z ${CLUSTER_NAME} ] ; then
+    export CLUSTER_NAME=$(grep ^cluster_name terraform.tfvars|awk '{ print $3 }'|cut -d '"' -f2)
+fi
+
 kubectl create secret generic ${CLUSTER_NAME}-ssh-key --from-file=ssh-privatekey=${HOME}/.ssh/id_rsa
 kubectl label secret ${CLUSTER_NAME}-ssh-key clusterctl.cluster.x-k8s.io/move=
 
@@ -40,3 +48,16 @@ rm /tmp/cluster*.yml
 kubectl apply -f cluster.yml
 
 kubectl get kubeadmcontrolplane,cluster,preprovisionedcluster,preprovisionedmachinetemplate,clusterresourceset,machinedeployment,preprovisionedmachinetemplate,kubeadmconfigtemplate
+
+echo "Waiting for platform cluster ready state..."
+
+while [ $(kubectl get kubeadmcontrolplane.controlplane.cluster.x-k8s.io/${CLUSTER_NAME}-control-plane -o json |jq '.status.readyReplicas') -ne $(grep ^master_node_count terraform.tfvars |awk '{ print $3 }') ] ; do 
+    echo "Waiting for Control Plane"
+done
+echo "Control Plane is ready."
+while [ $(kubectl get machinedeployment.cluster.x-k8s.io/${CLUSTER_NAME}-md-0 -o json |jq '.status.readyReplicas') -ne $(grep ^worker_node_count terraform.tfvars |awk '{ print $3 }') ] ; do 
+    echo "Waiting for Worker Nodes"
+done
+echo "Cluster is ready."
+
+./make_selfmanaged.sh
