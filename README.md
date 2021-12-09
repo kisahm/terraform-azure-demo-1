@@ -2,6 +2,10 @@
 
 Azure based demo environment for Konvoy based on Azure VMs.
 
+Tested with:
+- CentOS 7.9
+- Ubuntu 20.04
+
 ## Requirements
 - Azure CLI (for authentication usage)
 - Azure credentials
