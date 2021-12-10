@@ -6,7 +6,7 @@
     - name: generate template
       template:
         src: ../templates/PreprovisionedInventory.yml.j2
-        dest: PreprovisionedInventory.yml
+        dest: ../PreprovisionedInventory.yml
 
 - name: wait for nodes
   hosts: master,worker

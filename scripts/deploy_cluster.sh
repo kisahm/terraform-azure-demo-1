@@ -62,5 +62,3 @@ while [ $(kubectl get machinedeployment.cluster.x-k8s.io/${CLUSTER_NAME}-md-0 -o
     sleep 10
 done
 echo "\o/ Cluster is ready... \o/"
-
-.scripts/make_selfmanaged.sh
