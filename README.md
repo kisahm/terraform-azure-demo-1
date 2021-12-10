@@ -11,10 +11,10 @@ Tested with:
 - Azure credentials
 - Terraform 2.88.1+ (tested with 2.88.1)
 - jq
-- ansible 
+- ansible 2.12+
 - Ansible collection kubernetes.core
 - dpk cli 2.1.0+
-- kommander cli
+- kommander cli 2.1.0+
 
 ## Quickstart
 ````
