@@ -5,9 +5,13 @@ all:
 	./scripts/deploy_cluster.sh
 	./scripts/deploy_kommander.sh
 	./scripts/deploy_metallb.sh
+	./scripts/get_kommander_credentials.sh
 
 kommander:
 	./scripts/deploy_kommander.sh
+
+kommander-creds:
+	./scripts/get_kommander_credentials.sh
 
 metallb:
 	./scripts/deploy_metallb.sh
