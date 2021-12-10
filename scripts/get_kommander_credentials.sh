@@ -10,6 +10,11 @@ if [ -z ${CLUSTER_NAME} ] ; then
 fi
 set -x
 
+until [ $(kubectl get po --kubeconfig ${CLUSTER_NAME}.conf -n kommander grafana-loki-loki-distributed-ingester-0 -o json| jq '.status.phase' |cut -d'"' -f2) == "Running" ] ; do
+    echo "Waiting for Kommander pod 'grafana-loki-loki-distributed-ingester-0' to be up and running..."
+    sleep 10
+done
+
 while [ $(kubectl get svc --kubeconfig ${CLUSTER_NAME}.conf -n kommander kommander-traefik -o json| jq '.status.loadBalancer.ingress[].ip'|cut -d'"' -f2) == "pending" ] ; do
     echo "Waiting for Kommander Traefik svc loadbalancer ip"
     sleep 10
