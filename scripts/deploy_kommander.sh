@@ -11,4 +11,4 @@ fi
 
 set -x
 
-kommander install --kubeconfig ${CLUSTER_NAME}.conf  --installer-config templates/kommander.yml
+kommander install --kubeconfig ${CLUSTER_NAME}.conf  #--installer-config templates/kommander.yml

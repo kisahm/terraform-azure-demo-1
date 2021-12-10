@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ ! -e terraform.tfvars ] ; then
+if [ ! -e ./terraform.tfvars ] ; then
     echo "Could not find vars file: terraform.tfvars"
     exit 1
 fi
@@ -21,8 +21,8 @@ fi
 kubectl create secret generic ${CLUSTER_NAME}-ssh-key --from-file=ssh-privatekey=${HOME}/.ssh/id_rsa
 kubectl label secret ${CLUSTER_NAME}-ssh-key clusterctl.cluster.x-k8s.io/move=
 
-./create_ansible_inventory.sh
-ansible-playbook -i ./inventory -e sshSecretName="${CLUSTER_NAME}-ssh-key" -e sshUsername="$(grep ^admin_username terraform.tfvars|awk '{ print $3 }')" -e clusterName="${CLUSTER_NAME}" playbook-generate-inventory.yml || exit 1
+./scripts/create_ansible_inventory.sh
+ansible-playbook -i ./inventory -e sshSecretName="${CLUSTER_NAME}-ssh-key" -e sshUsername="$(grep ^admin_username terraform.tfvars|awk '{ print $3 }')" -e clusterName="${CLUSTER_NAME}" playbooks/prepare.yml || exit 1
 kubectl apply -f PreprovisionedInventory.yml
 
 if [ $(grep ^master_node_count terraform.tfvars |awk '{ print $3 }') -gt 1 ] ; then
@@ -49,17 +49,18 @@ kubectl apply -f cluster.yml
 
 kubectl get kubeadmcontrolplane,cluster,preprovisionedcluster,preprovisionedmachinetemplate,clusterresourceset,machinedeployment,preprovisionedmachinetemplate,kubeadmconfigtemplate
 
+set +x
 echo "Waiting for platform cluster ready state..."
 
-while [ $(kubectl get kubeadmcontrolplane.controlplane.cluster.x-k8s.io/${CLUSTER_NAME}-control-plane -o json |jq '.status.readyReplicas // 0') -ne $(grep ^master_node_count terraform.tfvars |awk '{ print $3 }') ] ; do 
+while [ $(kubectl get kubeadmcontrolplane.controlplane.cluster.x-k8s.io/${CLUSTER_NAME}-control-plane -o json |jq '.status.readyReplicas // 0') -ne $(grep ^master_node_count terraform.tfvars |awk '{ print $3 }') ] ; do
     echo "Waiting for Control Plane"
     sleep 10
 done
 echo "\o/ Control Plane is ready... \o/"
-while [ $(kubectl get machinedeployment.cluster.x-k8s.io/${CLUSTER_NAME}-md-0 -o json |jq '.status.readyReplicas // 0') -ne $(grep ^worker_node_count terraform.tfvars |awk '{ print $3 }') ] ; do 
+while [ $(kubectl get machinedeployment.cluster.x-k8s.io/${CLUSTER_NAME}-md-0 -o json |jq '.status.readyReplicas // 0') -ne $(grep ^worker_node_count terraform.tfvars |awk '{ print $3 }') ] ; do
     echo "Waiting for Worker Nodes"
     sleep 10
 done
 echo "\o/ Cluster is ready... \o/"
 
-./make_selfmanaged.sh
+.scripts/make_selfmanaged.sh

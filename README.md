@@ -12,6 +12,7 @@ Tested with:
 - Terraform 2.88.1+ (tested with 2.88.1)
 - jq
 - ansible 
+- Ansible collection kubernetes.core
 - dpk cli 2.1.0+
 - kommander cli
 
@@ -27,7 +28,7 @@ Environment     = "Test"
 master_node_count = 1
 worker_node_count = 2
 master_node_size = "Standard_D4s_v3"
-worker_node_size = "Standard_D4s_v3"
+worker_node_size = "Standard_D8s_v3"
 admin_username  = "ksahm"
 calico_interface = "eth0"
 cluster_name = "democluster"
@@ -40,6 +41,37 @@ $ terraform validate
 $ terraform apply
 
 $ ./deploy_cluster.sh
+````
+
+## The "longer" way
+````
+$ az login
+
+$ cat <<EOF > terraform.tfvars
+node_location   = "East US 2"
+resource_prefix = "ksahm"
+Environment     = "Test"
+# master_node_count could be 1 (single) oder 3 (HA)
+master_node_count = 1
+worker_node_count = 2
+master_node_size = "Standard_D4s_v3"
+worker_node_size = "Standard_D8s_v3"
+admin_username  = "ksahm"
+calico_interface = "eth0"
+cluster_name = "democluster"
+subscription_id = "<Azure subscription ID>"
+tenant_id       = "<Azure tenant ID>"
+EOF
+
+$ terraform validate
+
+$ terraform apply
+
+$ make cluster
+
+$ make kommander
+
+$ make metallb
 ````
 
 ## Test connection via Ansible

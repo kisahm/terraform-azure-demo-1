@@ -1,0 +1,42 @@
+---
+- name: prepare master
+  hosts: master
+  gather_facts: no
+  become: true
+  tasks:
+    - name: copy kubeconfig
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /root/.kube/config
+        remote_src: yes
+    - name: install helm
+      shell: "curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash"
+    - name: Add stable chart repo
+      kubernetes.core.helm_repository:
+        name: metallb
+        repo_url: "https://metallb.github.io/metallb"
+    - name: deploy metallb
+      kubernetes.core.helm:
+        name: metallb
+        chart_ref: metallb/metallb
+        release_namespace: default
+        #create_namespace: true
+        values: "{{ lookup('template', '../templates/metallb.yml') | from_yaml }}"
+
+- name: deploy Haproxy
+  hosts: worker
+  gather_facts: no
+  become: true
+  tasks:
+    - name: install packages
+      package: 
+        name: haproxy
+    - name: write config
+      template:
+        src: ../templates/haproxy.cfg.j2
+        dest: /etc/haproxy/haproxy.cfg
+    - name: restart haproxy
+      systemd:
+        name: haproxy
+        state: restarted
+        enabled: yes

@@ -123,7 +123,7 @@ resource "azurerm_network_security_group" "demo_nsg" {
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_ranges     = ["22","80","443","6443","9000","9001","30000-32000"]
+    destination_port_ranges     = ["22","80","443","6443","9000","9001","30000-34000"]
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }

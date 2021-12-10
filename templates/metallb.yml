@@ -1,0 +1,9 @@
+---
+configInline:
+  address-pools:
+   - name: default
+     protocol: layer2
+     addresses:
+{% for host in groups['worker'] %}
+     - {{hostvars[host]['ansible_host']}}/32
+{%endfor %}
