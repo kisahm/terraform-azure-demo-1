@@ -98,3 +98,8 @@ $ ansible worker -i inventory -m ping
     "ping": "pong"
 }
 ````
+
+## Teardown the environment
+````
+$ make teardown
+````
