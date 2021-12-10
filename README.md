@@ -36,11 +36,7 @@ subscription_id = "<Azure subscription ID>"
 tenant_id       = "<Azure tenant ID>"
 EOF
 
-$ terraform validate
-
-$ terraform apply
-
-$ ./deploy_cluster.sh
+$ make
 ````
 
 ## The "longer" way

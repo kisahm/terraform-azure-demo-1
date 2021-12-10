@@ -1,6 +1,7 @@
 .DEFAULT_GOAL := all
 
 all:
+	terraform validate
 	terraform apply -auto-approve
 	./scripts/deploy_cluster.sh
 	./scripts/deploy_kommander.sh
