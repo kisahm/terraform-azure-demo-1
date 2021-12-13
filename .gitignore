@@ -6,3 +6,5 @@ PreprovisionedInventory.yml
 *.conf
 cluster.yml
 ansible.cfg
+license*
+*.lic
