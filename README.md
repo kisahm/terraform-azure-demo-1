@@ -15,6 +15,7 @@ Tested with:
 - Ansible collection kubernetes.core
 - dpk cli 2.1.0+
 - kommander cli 2.1.0+
+- make
 
 ## Quickstart
 ````
@@ -32,6 +33,7 @@ worker_node_size = "Standard_D8s_v3"
 admin_username  = "ksahm"
 calico_interface = "eth0"
 cluster_name = "democluster"
+expiration = "3d"
 subscription_id = "<Azure subscription ID>"
 tenant_id       = "<Azure tenant ID>"
 EOF

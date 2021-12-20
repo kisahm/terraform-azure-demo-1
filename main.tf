@@ -18,6 +18,9 @@ provider "azurerm" {
 resource "azurerm_resource_group" "demo_rg" {
   name     = "${var.resource_prefix}-RG"
   location = var.node_location
+  tags = {
+    expiration = var.expiration
+  }
 }
 
 # Create a virtual network within the resource group
@@ -26,6 +29,9 @@ resource "azurerm_virtual_network" "demo_vnet" {
   resource_group_name = azurerm_resource_group.demo_rg.name
   location            = var.node_location
   address_space       = var.node_address_space
+  tags = {
+    expiration = var.expiration
+  }
 }
 
 # Create a subnets within the virtual network
@@ -46,6 +52,7 @@ resource "azurerm_public_ip" "demo_master_public_ip" {
   allocation_method   = var.Environment == "Test" ? "Static" : "Dynamic"
   tags = {
     environment = var.resource_prefix
+    expiration = var.expiration
   }
 }
 
@@ -59,6 +66,7 @@ resource "azurerm_public_ip" "demo_worker_public_ip" {
   allocation_method   = var.Environment == "Test" ? "Static" : "Dynamic"
   tags = {
     environment = var.resource_prefix
+    expiration = var.expiration
   }
 }
 
@@ -71,6 +79,7 @@ resource "azurerm_public_ip" "demo_worker_public_ip" {
 #  allocation_method   = var.Environment == "Test" ? "Static" : "Dynamic"
 #  tags = {
 #    environment = var.resource_prefix
+#    expiration = var.expiration
 #  }
 #}
 
@@ -90,6 +99,9 @@ resource "azurerm_network_interface" "demo_master_nic" {
     #public_ip_address_id = azurerm_public_ip.demo_public_ip.id
     #public_ip_address_id = azurerm_public_ip.demo_public_ip.id
   }
+  tags = {
+    expiration = var.expiration
+  }
 }
 
 # Create Network Interface for Worker
@@ -107,6 +119,9 @@ resource "azurerm_network_interface" "demo_worker_nic" {
     public_ip_address_id          = element(azurerm_public_ip.demo_worker_public_ip.*.id, count.index)
     #public_ip_address_id = azurerm_public_ip.demo_public_ip.id
     #public_ip_address_id = azurerm_public_ip.demo_public_ip.id
+  }
+  tags = {
+    expiration = var.expiration
   }
 }
 
@@ -129,6 +144,7 @@ resource "azurerm_network_security_group" "demo_nsg" {
   }
   tags = {
     environment = var.resource_prefix
+    expiration = var.expiration
   }
 }
 
@@ -188,6 +204,7 @@ resource "azurerm_linux_virtual_machine" "demo_master_linux_vm" {
     tags = {
         environment = var.resource_prefix
         node_type = "master"
+        expiration = var.expiration
     }
 }
 
@@ -240,6 +257,7 @@ resource "azurerm_linux_virtual_machine" "demo_worker_linux_vm" {
     tags = {
         environment = var.resource_prefix
         node_type = "worker"
+        expiration = var.expiration
     }
 }
 
