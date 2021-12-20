@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := all
 
-all: infra cluster kommander metallb kommander-creds
+all: infra cluster kommander metallb kommander-creds install-license
 
 kommander:
 	./scripts/deploy_kommander.sh
@@ -22,3 +22,6 @@ infra:
 teardown:
 	dkp delete bootstrap
 	terraform destroy
+
+install-license:
+	./scripts/install_license.sh

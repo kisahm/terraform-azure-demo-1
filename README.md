@@ -36,6 +36,10 @@ subscription_id = "<Azure subscription ID>"
 tenant_id       = "<Azure tenant ID>"
 EOF
 
+$ cat <<EOF > license.lic
+<license key>
+EOF
+
 $ make
 ````
 
@@ -59,6 +63,10 @@ subscription_id = "<Azure subscription ID>"
 tenant_id       = "<Azure tenant ID>"
 EOF
 
+$ cat <<EOF > license.lic
+<license key>
+EOF
+
 $ terraform validate
 
 $ terraform apply
@@ -68,6 +76,8 @@ $ make cluster
 $ make kommander
 
 $ make metallb
+
+$ make install-license
 ````
 
 ## Test connection via Ansible
