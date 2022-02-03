@@ -42,6 +42,12 @@
         - "5"
         - "6"
         - "7"
+        - "8" 
+        - "9"
+        - "10"
+        - "11"
+        - "12"
+        - "13"
     - name: create loopback targets
       file: 
          path: "/mnt/disks/volume-0{{item}}"
@@ -55,6 +61,12 @@
         - "5"
         - "6"
         - "7"
+        - "8" 
+        - "9"
+        - "10"
+        - "11"
+        - "12"
+        - "13"
     - name: mount loopback devices
       mount:
         path: "/mnt/disks/volume-0{{item}}"
@@ -71,3 +83,9 @@
         - "5"
         - "6"
         - "7"
+        - "8" 
+        - "9"
+        - "10"
+        - "11"
+        - "12"
+        - "13"

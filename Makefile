@@ -25,3 +25,15 @@ teardown:
 
 install-license:
 	./scripts/install_license.sh
+
+prepare-truck-demo:
+	./scripts/prepare_truck_demo.sh
+
+restart-trucks:
+	./scripts/restart_trucks.sh
+
+cleanup-trucks:
+	./scripts/cleanup_trucks.sh
+
+watch-demo:
+	./scripts/watch_namespace.sh truck-demo
